@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "697334511638",
+    "project_id": "hanproject-18",
+    "storage_bucket": "hanproject-18.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:697334511638:android:2f313e699e3ada7a479d37",
+        "android_client_info": {
+          "package_name": "com.company.myapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCj_9OKsGMBOuJDI1DFPBI084XpSJUmUy8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:697334511638:android:a16d70e9dd4a10e9479d37",
+        "android_client_info": {
+          "package_name": "com.example.meet8"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCj_9OKsGMBOuJDI1DFPBI084XpSJUmUy8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
