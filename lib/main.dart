@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      // Otomatis mengarahkan ke HomePage jika sudah login, atau LoginPage jika belum
+
       home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
@@ -52,7 +52,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _isLogin = true; // Mode true = Login, false = Register
+  bool _isLogin = true;
   bool _isLoading = false;
 
   Future<void> _submit() async {
@@ -68,13 +68,13 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       if (_isLogin) {
-        // Proses Login
+        
         await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: email,
           password: password,
         );
       } else {
-        // Proses Buat Akun Baru
+        
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: email,
           password: password,
@@ -176,6 +176,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Halaman Utama'),
+        centerTitle: true,
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
@@ -185,18 +186,126 @@ class HomePage extends StatelessWidget {
         ],
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('Berhasil Login sebagai:', style: TextStyle(fontSize: 16)),
-            const SizedBox(height: 8),
-            Text(
-              user?.email ?? 'User',
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 450),
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Card(
+              elevation: 2,
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const CircleAvatar(
+                      radius: 40,
+                      child: Icon(Icons.person, size: 40),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Selamat Datang!',
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      user?.email ?? 'Tidak ada email',
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            color: Colors.grey[700],
+                          ),
+                    ),
+                    const Divider(height: 32),
+                    _InfoRow(
+                      icon: Icons.badge_outlined,
+                      label: 'User ID (UID)',
+                      value: user?.uid ?? '-',
+                    ),
+                    const SizedBox(height: 12),
+                    _InfoRow(
+                      icon: Icons.verified_user_outlined,
+                      label: 'Status Email',
+                      value: (user?.emailVerified ?? false)
+                          ? 'Terverifikasi'
+                          : 'Belum Verifikasi',
+                    ),
+                    const SizedBox(height: 12),
+                    _InfoRow(
+                      icon: Icons.calendar_today_outlined,
+                      label: 'Akun Dibuat',
+                      value: user?.metadata.creationTime
+                              ?.toLocal()
+                              .toString()
+                              .split('.')[0] ??
+                          '-',
+                    ),
+                    const SizedBox(height: 12),
+                    _InfoRow(
+                      icon: Icons.access_time,
+                      label: 'Terakhir Login',
+                      value: user?.metadata.lastSignInTime
+                              ?.toLocal()
+                              .toString()
+                              .split('.')[0] ??
+                          '-',
+                    ),
+                    const SizedBox(height: 24),
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: () => FirebaseAuth.instance.signOut(),
+                        icon: const Icon(Icons.logout),
+                        label: const Text('Keluar dari Akun'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ],
+          ),
         ),
       ),
+    );
+  }
+}
+
+class _InfoRow extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+
+  const _InfoRow({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, size: 20, color: Theme.of(context).colorScheme.primary),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
+              ),
+              Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
